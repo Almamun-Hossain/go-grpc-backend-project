@@ -1,0 +1,174 @@
+syntax = "proto3";
+
+package api.website.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+
+option go_package = "website-service/api/website/v1;v1";
+
+// Website service handles website management features
+service Website {
+  // Site Settings
+  rpc GetSiteSettings (GetSiteSettingsRequest) returns (GetSiteSettingsReply) {
+    option (google.api.http) = {
+      get: "/v1/site/settings"
+    };
+  }
+  
+  rpc UpdateSiteSettings (UpdateSiteSettingsRequest) returns (UpdateSiteSettingsReply) {
+    option (google.api.http) = {
+      put: "/v1/site/settings"
+      body: "*"
+    };
+  }
+  
+  // Site Title
+  rpc UpdateSiteTitle (UpdateSiteTitleRequest) returns (UpdateSiteTitleReply) {
+    option (google.api.http) = {
+      put: "/v1/site/title"
+      body: "*"
+    };
+  }
+  
+  // Logo Management
+  rpc UploadLogo (UploadLogoRequest) returns (UploadLogoReply) {
+    option (google.api.http) = {
+      post: "/v1/site/logo"
+      body: "*"
+    };
+  }
+  
+  rpc GetLogo (GetLogoRequest) returns (GetLogoReply) {
+    option (google.api.http) = {
+      get: "/v1/site/logo"
+    };
+  }
+  
+  rpc DeleteLogo (DeleteLogoRequest) returns (DeleteLogoReply) {
+    option (google.api.http) = {
+      delete: "/v1/site/logo"
+    };
+  }
+  
+  // Dynamic Settings
+  rpc GetDynamicSettings (GetDynamicSettingsRequest) returns (GetDynamicSettingsReply) {
+    option (google.api.http) = {
+      get: "/v1/site/dynamic-settings"
+    };
+  }
+  
+  rpc UpdateDynamicSetting (UpdateDynamicSettingRequest) returns (UpdateDynamicSettingReply) {
+    option (google.api.http) = {
+      put: "/v1/site/dynamic-settings/{key}"
+      body: "*"
+    };
+  }
+  
+  rpc DeleteDynamicSetting (DeleteDynamicSettingRequest) returns (DeleteDynamicSettingReply) {
+    option (google.api.http) = {
+      delete: "/v1/site/dynamic-settings/{key}"
+    };
+  }
+}
+
+// Site Settings Messages
+message GetSiteSettingsRequest {}
+
+message GetSiteSettingsReply {
+  SiteSettings settings = 1;
+}
+
+message UpdateSiteSettingsRequest {
+  string title = 1;
+  string description = 2;
+  string keywords = 3;
+  string contact_email = 4;
+  string contact_phone = 5;
+  bool maintenance_mode = 6;
+}
+
+message UpdateSiteSettingsReply {
+  SiteSettings settings = 1;
+}
+
+message SiteSettings {
+  string id = 1;
+  string title = 2;
+  string description = 3;
+  string keywords = 4;
+  string logo_url = 5;
+  string contact_email = 6;
+  string contact_phone = 7;
+  bool maintenance_mode = 8;
+  google.protobuf.Timestamp created_at = 9;
+  google.protobuf.Timestamp updated_at = 10;
+}
+
+// Site Title Messages
+message UpdateSiteTitleRequest {
+  string title = 1 [(validate.rules).string = {min_len: 1, max_len: 200}];
+}
+
+message UpdateSiteTitleReply {
+  string title = 1;
+  google.protobuf.Timestamp updated_at = 2;
+}
+
+// Logo Messages
+message UploadLogoRequest {
+  bytes file_data = 1;
+  string file_name = 2;
+  string content_type = 3;
+}
+
+message UploadLogoReply {
+  string logo_url = 1;
+  google.protobuf.Timestamp uploaded_at = 2;
+}
+
+message GetLogoRequest {}
+
+message GetLogoReply {
+  string logo_url = 1;
+  google.protobuf.Timestamp uploaded_at = 2;
+}
+
+message DeleteLogoRequest {}
+
+message DeleteLogoReply {
+  bool success = 1;
+}
+
+// Dynamic Settings Messages
+message GetDynamicSettingsRequest {}
+
+message GetDynamicSettingsReply {
+  map<string, string> settings = 1;
+}
+
+message UpdateDynamicSettingRequest {
+  string key = 1 [(validate.rules).string = {min_len: 1, max_len: 100}];
+  string value = 2;
+}
+
+message UpdateDynamicSettingReply {
+  DynamicSetting setting = 1;
+}
+
+message DeleteDynamicSettingRequest {
+  string key = 1 [(validate.rules).string = {min_len: 1}];
+}
+
+message DeleteDynamicSettingReply {
+  bool success = 1;
+}
+
+message DynamicSetting {
+  string key = 1;
+  string value = 2;
+  google.protobuf.Timestamp created_at = 3;
+  google.protobuf.Timestamp updated_at = 4;
+}
+

@@ -1,0 +1,226 @@
+syntax = "proto3";
+
+package api.membership.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+
+option go_package = "membership-service/api/membership/v1;v1";
+
+// Membership service handles user authentication, registration, and asset management
+service Membership {
+  // User Authentication
+  rpc Register (RegisterRequest) returns (RegisterReply) {
+    option (google.api.http) = {
+      post: "/v1/auth/register"
+      body: "*"
+    };
+  }
+  
+  rpc Login (LoginRequest) returns (LoginReply) {
+    option (google.api.http) = {
+      post: "/v1/auth/login"
+      body: "*"
+    };
+  }
+  
+  rpc RefreshToken (RefreshTokenRequest) returns (RefreshTokenReply) {
+    option (google.api.http) = {
+      post: "/v1/auth/refresh"
+      body: "*"
+    };
+  }
+  
+  // User Profile
+  rpc GetProfile (GetProfileRequest) returns (GetProfileReply) {
+    option (google.api.http) = {
+      get: "/v1/users/profile"
+    };
+  }
+  
+  rpc UpdateProfile (UpdateProfileRequest) returns (UpdateProfileReply) {
+    option (google.api.http) = {
+      put: "/v1/users/profile"
+      body: "*"
+    };
+  }
+  
+  // Asset Management
+  rpc GetAssets (GetAssetsRequest) returns (GetAssetsReply) {
+    option (google.api.http) = {
+      get: "/v1/users/assets"
+    };
+  }
+  
+  rpc UpdateAsset (UpdateAssetRequest) returns (UpdateAssetReply) {
+    option (google.api.http) = {
+      put: "/v1/users/assets/{asset_id}"
+      body: "*"
+    };
+  }
+  
+  // Referral System
+  rpc GetReferrals (GetReferralsRequest) returns (GetReferralsReply) {
+    option (google.api.http) = {
+      get: "/v1/users/referrals"
+    };
+  }
+  
+  rpc RequestWithdrawal (WithdrawalRequest) returns (WithdrawalReply) {
+    option (google.api.http) = {
+      post: "/v1/users/withdrawals"
+      body: "*"
+    };
+  }
+  
+  rpc GetWithdrawals (GetWithdrawalsRequest) returns (GetWithdrawalsReply) {
+    option (google.api.http) = {
+      get: "/v1/users/withdrawals"
+    };
+  }
+}
+
+// Authentication Messages
+message RegisterRequest {
+  string email = 1 [(validate.rules).string = {email: true, min_len: 5}];
+  string password = 2 [(validate.rules).string = {min_len: 8}];
+  string username = 3 [(validate.rules).string = {min_len: 3, max_len: 50}];
+  string referral_code = 4;
+}
+
+message RegisterReply {
+  string user_id = 1;
+  string access_token = 2;
+  string refresh_token = 3;
+  google.protobuf.Timestamp expires_at = 4;
+}
+
+message LoginRequest {
+  string email = 1 [(validate.rules).string = {email: true}];
+  string password = 2 [(validate.rules).string = {min_len: 1}];
+}
+
+message LoginReply {
+  string user_id = 1;
+  string access_token = 2;
+  string refresh_token = 3;
+  google.protobuf.Timestamp expires_at = 4;
+}
+
+message RefreshTokenRequest {
+  string refresh_token = 1 [(validate.rules).string = {min_len: 1}];
+}
+
+message RefreshTokenReply {
+  string access_token = 1;
+  string refresh_token = 2;
+  google.protobuf.Timestamp expires_at = 3;
+}
+
+// User Profile Messages
+message GetProfileRequest {}
+
+message GetProfileReply {
+  User user = 1;
+}
+
+message UpdateProfileRequest {
+  string username = 1;
+  string phone = 2;
+  string avatar_url = 3;
+}
+
+message UpdateProfileReply {
+  User user = 1;
+}
+
+message User {
+  string id = 1;
+  string email = 2;
+  string username = 3;
+  string phone = 4;
+  string avatar_url = 5;
+  string referral_code = 6;
+  google.protobuf.Timestamp created_at = 7;
+  google.protobuf.Timestamp updated_at = 8;
+}
+
+// Asset Management Messages
+message GetAssetsRequest {}
+
+message GetAssetsReply {
+  repeated Asset assets = 1;
+  double total_balance = 2;
+}
+
+message UpdateAssetRequest {
+  string asset_id = 1;
+  double amount = 2;
+  string operation = 3; // "add" or "subtract"
+}
+
+message UpdateAssetReply {
+  Asset asset = 1;
+}
+
+message Asset {
+  string id = 1;
+  string user_id = 2;
+  string asset_type = 3; // e.g., "USD", "EUR", "BTC"
+  double balance = 4;
+  google.protobuf.Timestamp created_at = 5;
+  google.protobuf.Timestamp updated_at = 6;
+}
+
+// Referral System Messages
+message GetReferralsRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+}
+
+message GetReferralsReply {
+  repeated Referral referrals = 1;
+  int32 total = 2;
+  double total_earnings = 3;
+}
+
+message Referral {
+  string id = 1;
+  string referred_user_id = 2;
+  string referred_username = 3;
+  double earnings = 4;
+  string status = 5; // "pending", "approved", "paid"
+  google.protobuf.Timestamp created_at = 6;
+}
+
+message WithdrawalRequest {
+  double amount = 1 [(validate.rules).double = {gt: 0}];
+  string payment_method = 2;
+  string payment_details = 3;
+}
+
+message WithdrawalReply {
+  Withdrawal withdrawal = 1;
+}
+
+message GetWithdrawalsRequest {
+  int32 page = 1;
+  int32 page_size = 2;
+}
+
+message GetWithdrawalsReply {
+  repeated Withdrawal withdrawals = 1;
+  int32 total = 2;
+}
+
+message Withdrawal {
+  string id = 1;
+  string user_id = 2;
+  double amount = 3;
+  string payment_method = 4;
+  string status = 5; // "pending", "processing", "completed", "rejected"
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
+}
+

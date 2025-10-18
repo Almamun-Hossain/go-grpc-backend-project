@@ -1,0 +1,290 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: Website API
+    description: Website service handles website management features
+    version: 0.0.1
+paths:
+    /v1/site/dynamic-settings:
+        get:
+            tags:
+                - Website
+            description: Dynamic Settings
+            operationId: Website_GetDynamicSettings
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.website.v1.GetDynamicSettingsReply'
+    /v1/site/dynamic-settings/{key}:
+        put:
+            tags:
+                - Website
+            operationId: Website_UpdateDynamicSetting
+            parameters:
+                - name: key
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.website.v1.UpdateDynamicSettingRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.website.v1.UpdateDynamicSettingReply'
+        delete:
+            tags:
+                - Website
+            operationId: Website_DeleteDynamicSetting
+            parameters:
+                - name: key
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.website.v1.DeleteDynamicSettingReply'
+    /v1/site/logo:
+        get:
+            tags:
+                - Website
+            operationId: Website_GetLogo
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.website.v1.GetLogoReply'
+        post:
+            tags:
+                - Website
+            description: Logo Management
+            operationId: Website_UploadLogo
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.website.v1.UploadLogoRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.website.v1.UploadLogoReply'
+        delete:
+            tags:
+                - Website
+            operationId: Website_DeleteLogo
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.website.v1.DeleteLogoReply'
+    /v1/site/settings:
+        get:
+            tags:
+                - Website
+            description: Site Settings
+            operationId: Website_GetSiteSettings
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.website.v1.GetSiteSettingsReply'
+        put:
+            tags:
+                - Website
+            operationId: Website_UpdateSiteSettings
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.website.v1.UpdateSiteSettingsRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.website.v1.UpdateSiteSettingsReply'
+    /v1/site/title:
+        put:
+            tags:
+                - Website
+            description: Site Title
+            operationId: Website_UpdateSiteTitle
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.website.v1.UpdateSiteTitleRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.website.v1.UpdateSiteTitleReply'
+components:
+    schemas:
+        api.website.v1.DeleteDynamicSettingReply:
+            type: object
+            properties:
+                success:
+                    type: boolean
+        api.website.v1.DeleteLogoReply:
+            type: object
+            properties:
+                success:
+                    type: boolean
+        api.website.v1.DynamicSetting:
+            type: object
+            properties:
+                key:
+                    type: string
+                value:
+                    type: string
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+        api.website.v1.GetDynamicSettingsReply:
+            type: object
+            properties:
+                settings:
+                    type: object
+                    additionalProperties:
+                        type: string
+        api.website.v1.GetLogoReply:
+            type: object
+            properties:
+                logoUrl:
+                    type: string
+                uploadedAt:
+                    type: string
+                    format: date-time
+        api.website.v1.GetSiteSettingsReply:
+            type: object
+            properties:
+                settings:
+                    $ref: '#/components/schemas/api.website.v1.SiteSettings'
+        api.website.v1.SiteSettings:
+            type: object
+            properties:
+                id:
+                    type: string
+                title:
+                    type: string
+                description:
+                    type: string
+                keywords:
+                    type: string
+                logoUrl:
+                    type: string
+                contactEmail:
+                    type: string
+                contactPhone:
+                    type: string
+                maintenanceMode:
+                    type: boolean
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+        api.website.v1.UpdateDynamicSettingReply:
+            type: object
+            properties:
+                setting:
+                    $ref: '#/components/schemas/api.website.v1.DynamicSetting'
+        api.website.v1.UpdateDynamicSettingRequest:
+            type: object
+            properties:
+                key:
+                    type: string
+                value:
+                    type: string
+        api.website.v1.UpdateSiteSettingsReply:
+            type: object
+            properties:
+                settings:
+                    $ref: '#/components/schemas/api.website.v1.SiteSettings'
+        api.website.v1.UpdateSiteSettingsRequest:
+            type: object
+            properties:
+                title:
+                    type: string
+                description:
+                    type: string
+                keywords:
+                    type: string
+                contactEmail:
+                    type: string
+                contactPhone:
+                    type: string
+                maintenanceMode:
+                    type: boolean
+        api.website.v1.UpdateSiteTitleReply:
+            type: object
+            properties:
+                title:
+                    type: string
+                updatedAt:
+                    type: string
+                    format: date-time
+        api.website.v1.UpdateSiteTitleRequest:
+            type: object
+            properties:
+                title:
+                    type: string
+            description: Site Title Messages
+        api.website.v1.UploadLogoReply:
+            type: object
+            properties:
+                logoUrl:
+                    type: string
+                uploadedAt:
+                    type: string
+                    format: date-time
+        api.website.v1.UploadLogoRequest:
+            type: object
+            properties:
+                fileData:
+                    type: string
+                    format: bytes
+                fileName:
+                    type: string
+                contentType:
+                    type: string
+            description: Logo Messages
+tags:
+    - name: Website

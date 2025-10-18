@@ -1,0 +1,129 @@
+services:
+  # PostgreSQL Database for Membership Service
+  membership-db:
+    image: postgres:15-alpine
+    container_name: membership-db
+    environment:
+      POSTGRES_DB: membership
+      POSTGRES_USER: membership_user
+      POSTGRES_PASSWORD: membership_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - membership-data:/var/lib/postgresql/data
+    networks:
+      - backend
+
+  # PostgreSQL Database for Website Service
+  website-db:
+    image: postgres:15-alpine
+    container_name: website-db
+    environment:
+      POSTGRES_DB: website
+      POSTGRES_USER: website_user
+      POSTGRES_PASSWORD: website_pass
+    ports:
+      - "5433:5432"
+    volumes:
+      - website-data:/var/lib/postgresql/data
+    networks:
+      - backend
+
+  # PostgreSQL Database for Banking Service
+  banking-db:
+    image: postgres:15-alpine
+    container_name: banking-db
+    environment:
+      POSTGRES_DB: banking
+      POSTGRES_USER: banking_user
+      POSTGRES_PASSWORD: banking_pass
+    ports:
+      - "5434:5432"
+    volumes:
+      - banking-data:/var/lib/postgresql/data
+    networks:
+      - backend
+
+  # Membership Service
+  membership-service:
+    build:
+      context: ./membership-service
+      dockerfile: Dockerfile
+    container_name: membership-service
+    environment:
+      - DATABASE_URL=postgres://membership_user:membership_pass@membership-db:5432/membership?sslmode=disable
+    ports:
+      - "8081:8081"
+      - "9081:9081"
+    depends_on:
+      - membership-db
+    networks:
+      - backend
+    restart: unless-stopped
+
+  # Website Service
+  website-service:
+    build:
+      context: ./website-service
+      dockerfile: Dockerfile
+    container_name: website-service
+    environment:
+      - DATABASE_URL=postgres://website_user:website_pass@website-db:5432/website?sslmode=disable
+    ports:
+      - "8082:8082"
+      - "9082:9082"
+    depends_on:
+      - website-db
+    networks:
+      - backend
+    restart: unless-stopped
+
+  # Banking Service
+  banking-service:
+    build:
+      context: ./banking-service
+      dockerfile: Dockerfile
+    container_name: banking-service
+    environment:
+      - DATABASE_URL=postgres://banking_user:banking_pass@banking-db:5432/banking?sslmode=disable
+      - UPSTREAM_BANK_URL=https://api.bank.example.com
+      - UPSTREAM_BANK_API_KEY=your_api_key_here
+    ports:
+      - "8083:8083"
+      - "9083:9083"
+    depends_on:
+      - banking-db
+    networks:
+      - backend
+    restart: unless-stopped
+
+  # API Gateway
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    container_name: api-gateway
+    environment:
+      - PORT=:8080
+      - MEMBERSHIP_SERVICE_URL=http://membership-service:8081
+      - WEBSITE_SERVICE_URL=http://website-service:8082
+      - BANKING_SERVICE_URL=http://banking-service:8083
+    ports:
+      - "8080:8080"
+    depends_on:
+      - membership-service
+      - website-service
+      - banking-service
+    networks:
+      - backend
+    restart: unless-stopped
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  membership-data:
+  website-data:
+  banking-data:
+

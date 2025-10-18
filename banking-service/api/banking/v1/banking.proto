@@ -1,0 +1,198 @@
+syntax = "proto3";
+
+package api.banking.v1;
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+
+option go_package = "banking-service/api/banking/v1;v1";
+
+// Banking service handles integration with upstream banking APIs
+service Banking {
+  // Card Information
+  rpc GetCardInfo (GetCardInfoRequest) returns (GetCardInfoReply) {
+    option (google.api.http) = {
+      get: "/v1/banking/cards/{card_id}"
+    };
+  }
+  
+  rpc ListCards (ListCardsRequest) returns (ListCardsReply) {
+    option (google.api.http) = {
+      get: "/v1/banking/cards"
+    };
+  }
+  
+  // Credit Card Balance
+  rpc GetCreditCardBalance (GetCreditCardBalanceRequest) returns (GetCreditCardBalanceReply) {
+    option (google.api.http) = {
+      get: "/v1/banking/cards/{card_id}/balance"
+    };
+  }
+  
+  // Physical Card Display
+  rpc GetPhysicalCardDetails (GetPhysicalCardDetailsRequest) returns (GetPhysicalCardDetailsReply) {
+    option (google.api.http) = {
+      get: "/v1/banking/cards/{card_id}/physical"
+    };
+  }
+  
+  // Global Remittance
+  rpc InitiateRemittance (InitiateRemittanceRequest) returns (InitiateRemittanceReply) {
+    option (google.api.http) = {
+      post: "/v1/banking/remittance"
+      body: "*"
+    };
+  }
+  
+  rpc GetRemittanceStatus (GetRemittanceStatusRequest) returns (GetRemittanceStatusReply) {
+    option (google.api.http) = {
+      get: "/v1/banking/remittance/{transaction_id}"
+    };
+  }
+  
+  rpc ListRemittances (ListRemittancesRequest) returns (ListRemittancesReply) {
+    option (google.api.http) = {
+      get: "/v1/banking/remittance"
+    };
+  }
+  
+  // Exchange Rates
+  rpc GetExchangeRate (GetExchangeRateRequest) returns (GetExchangeRateReply) {
+    option (google.api.http) = {
+      get: "/v1/banking/exchange-rate"
+    };
+  }
+}
+
+// Card Information Messages
+message GetCardInfoRequest {
+  string card_id = 1 [(validate.rules).string = {min_len: 1}];
+}
+
+message GetCardInfoReply {
+  Card card = 1;
+}
+
+message ListCardsRequest {
+  string user_id = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+}
+
+message ListCardsReply {
+  repeated Card cards = 1;
+  int32 total = 2;
+}
+
+message Card {
+  string id = 1;
+  string user_id = 2;
+  string card_number_masked = 3; // e.g., "**** **** **** 1234"
+  string card_type = 4; // "credit" or "debit"
+  string card_brand = 5; // "visa", "mastercard", etc.
+  string status = 6; // "active", "blocked", "expired"
+  google.protobuf.Timestamp expiry_date = 7;
+  google.protobuf.Timestamp created_at = 8;
+}
+
+// Credit Card Balance Messages
+message GetCreditCardBalanceRequest {
+  string card_id = 1 [(validate.rules).string = {min_len: 1}];
+}
+
+message GetCreditCardBalanceReply {
+  string card_id = 1;
+  double available_balance = 2;
+  double credit_limit = 3;
+  double outstanding_balance = 4;
+  string currency = 5;
+  google.protobuf.Timestamp last_updated = 6;
+}
+
+// Physical Card Details Messages
+message GetPhysicalCardDetailsRequest {
+  string card_id = 1 [(validate.rules).string = {min_len: 1}];
+}
+
+message GetPhysicalCardDetailsReply {
+  string card_id = 1;
+  string card_number_masked = 2;
+  string cardholder_name = 3;
+  string expiry_date = 4; // MM/YY format
+  string cvv_masked = 5; // "***"
+  string card_type = 6;
+  string card_brand = 7;
+}
+
+// Global Remittance Messages
+message InitiateRemittanceRequest {
+  string from_account = 1 [(validate.rules).string = {min_len: 1}];
+  string to_account = 2 [(validate.rules).string = {min_len: 1}];
+  double amount = 3 [(validate.rules).double = {gt: 0}];
+  string from_currency = 4 [(validate.rules).string = {len: 3}]; // ISO 4217
+  string to_currency = 5 [(validate.rules).string = {len: 3}]; // ISO 4217
+  string beneficiary_name = 6;
+  string beneficiary_bank = 7;
+  string purpose = 8;
+}
+
+message InitiateRemittanceReply {
+  string transaction_id = 1;
+  string status = 2; // "pending", "processing", "completed", "failed"
+  double amount = 3;
+  double exchange_rate = 4;
+  double fee = 5;
+  double total_amount = 6;
+  google.protobuf.Timestamp created_at = 7;
+}
+
+message GetRemittanceStatusRequest {
+  string transaction_id = 1 [(validate.rules).string = {min_len: 1}];
+}
+
+message GetRemittanceStatusReply {
+  Remittance remittance = 1;
+}
+
+message ListRemittancesRequest {
+  string user_id = 1;
+  int32 page = 2;
+  int32 page_size = 3;
+  string status = 4; // Optional filter
+}
+
+message ListRemittancesReply {
+  repeated Remittance remittances = 1;
+  int32 total = 2;
+}
+
+message Remittance {
+  string transaction_id = 1;
+  string from_account = 2;
+  string to_account = 3;
+  double amount = 4;
+  string from_currency = 5;
+  string to_currency = 6;
+  double exchange_rate = 7;
+  double fee = 8;
+  string status = 9;
+  string beneficiary_name = 10;
+  string beneficiary_bank = 11;
+  google.protobuf.Timestamp created_at = 12;
+  google.protobuf.Timestamp updated_at = 13;
+}
+
+// Exchange Rate Messages
+message GetExchangeRateRequest {
+  string from_currency = 1 [(validate.rules).string = {len: 3}];
+  string to_currency = 2 [(validate.rules).string = {len: 3}];
+}
+
+message GetExchangeRateReply {
+  string from_currency = 1;
+  string to_currency = 2;
+  double rate = 3;
+  google.protobuf.Timestamp timestamp = 4;
+}
+

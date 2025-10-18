@@ -1,0 +1,637 @@
+{
+	"info": {
+		"_postman_id": "go-backend-api-gateway",
+		"name": "Go Backend API Gateway",
+		"description": "Complete API collection for the Go Backend Microservices project through API Gateway",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Health Check",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/health",
+							"host": ["{{base_url}}"],
+							"path": ["health"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\",\n  \"username\": \"testuser\",\n  \"referralCode\": \"REF123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/register",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "auth", "register"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/login",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "auth", "login"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"refreshToken\": \"refresh_token_placeholder\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/auth/refresh",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "auth", "refresh"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User Management",
+			"item": [
+				{
+					"name": "Get User Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/profile",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "users", "profile"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update User Profile",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"updateduser\",\n  \"phone\": \"+1234567890\",\n  \"avatarUrl\": \"https://example.com/avatar.jpg\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/profile",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "users", "profile"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Assets",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/assets",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "users", "assets"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Asset",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"balance\": 1500.75\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/assets/asset_1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "users", "assets", "asset_1"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Referrals",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/referrals",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "users", "referrals"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Request Withdrawal",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"amount\": 100.50,\n  \"currency\": \"USD\",\n  \"bankAccount\": \"1234567890\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/withdrawals",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "users", "withdrawals"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Withdrawals",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/withdrawals",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "users", "withdrawals"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Website Management",
+			"item": [
+				{
+					"name": "Get Site Settings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/site/settings",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "site", "settings"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Site Settings",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Updated Website Title\",\n  \"description\": \"Updated description\",\n  \"keywords\": \"updated, keywords\",\n  \"contactEmail\": \"newcontact@example.com\",\n  \"contactPhone\": \"+9876543210\",\n  \"maintenanceMode\": false\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/site/settings",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "site", "settings"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Site Title",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"New Website Title\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/site/title",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "site", "title"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Logo",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/site/logo",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "site", "logo"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Upload Logo",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"logoUrl\": \"https://example.com/new-logo.png\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/site/logo",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "site", "logo"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Logo",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/site/logo",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "site", "logo"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Dynamic Settings",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/site/dynamic-settings",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "site", "dynamic-settings"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Dynamic Setting",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"value\": \"updated_value\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/site/dynamic-settings/theme_color",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "site", "dynamic-settings", "theme_color"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Dynamic Setting",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/site/dynamic-settings/theme_color",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "site", "dynamic-settings", "theme_color"]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Banking Operations",
+			"item": [
+				{
+					"name": "List Cards",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/banking/cards",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "banking", "cards"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Card Info",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/banking/cards/card_1",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "banking", "cards", "card_1"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Card Balance",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/banking/cards/card_1/balance",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "banking", "cards", "card_1", "balance"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Physical Card Details",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/banking/cards/card_1/physical",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "banking", "cards", "card_1", "physical"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Initiate Remittance",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"fromAccount\": \"account_123\",\n  \"toAccount\": \"account_456\",\n  \"amount\": 100.00,\n  \"fromCurrency\": \"USD\",\n  \"toCurrency\": \"EUR\",\n  \"recipientName\": \"John Doe\",\n  \"recipientEmail\": \"john@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/banking/remittance",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "banking", "remittance"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "List Remittances",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/banking/remittance",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "banking", "remittance"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Remittance Status",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/banking/remittance/txn_123",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "banking", "remittance", "txn_123"]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Exchange Rate",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/banking/exchange-rate?from_currency=USD&to_currency=EUR",
+							"host": ["{{base_url}}"],
+							"path": ["api", "v1", "banking", "exchange-rate"],
+							"query": [
+								{
+									"key": "from_currency",
+									"value": "USD"
+								},
+								{
+									"key": "to_currency",
+									"value": "EUR"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "access_token",
+			"value": "test_token",
+			"type": "string"
+		}
+	]
+}

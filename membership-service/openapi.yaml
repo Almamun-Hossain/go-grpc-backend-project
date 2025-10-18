@@ -1,0 +1,415 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: Membership API
+    description: Membership service handles user authentication, registration, and asset management
+    version: 0.0.1
+paths:
+    /v1/auth/login:
+        post:
+            tags:
+                - Membership
+            operationId: Membership_Login
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.membership.v1.LoginRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.membership.v1.LoginReply'
+    /v1/auth/refresh:
+        post:
+            tags:
+                - Membership
+            operationId: Membership_RefreshToken
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.membership.v1.RefreshTokenRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.membership.v1.RefreshTokenReply'
+    /v1/auth/register:
+        post:
+            tags:
+                - Membership
+            description: User Authentication
+            operationId: Membership_Register
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.membership.v1.RegisterRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.membership.v1.RegisterReply'
+    /v1/users/assets:
+        get:
+            tags:
+                - Membership
+            description: Asset Management
+            operationId: Membership_GetAssets
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.membership.v1.GetAssetsReply'
+    /v1/users/assets/{assetId}:
+        put:
+            tags:
+                - Membership
+            operationId: Membership_UpdateAsset
+            parameters:
+                - name: assetId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.membership.v1.UpdateAssetRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.membership.v1.UpdateAssetReply'
+    /v1/users/profile:
+        get:
+            tags:
+                - Membership
+            description: User Profile
+            operationId: Membership_GetProfile
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.membership.v1.GetProfileReply'
+        put:
+            tags:
+                - Membership
+            operationId: Membership_UpdateProfile
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.membership.v1.UpdateProfileRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.membership.v1.UpdateProfileReply'
+    /v1/users/referrals:
+        get:
+            tags:
+                - Membership
+            description: Referral System
+            operationId: Membership_GetReferrals
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.membership.v1.GetReferralsReply'
+    /v1/users/withdrawals:
+        get:
+            tags:
+                - Membership
+            operationId: Membership_GetWithdrawals
+            parameters:
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.membership.v1.GetWithdrawalsReply'
+        post:
+            tags:
+                - Membership
+            operationId: Membership_RequestWithdrawal
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.membership.v1.WithdrawalRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.membership.v1.WithdrawalReply'
+components:
+    schemas:
+        api.membership.v1.Asset:
+            type: object
+            properties:
+                id:
+                    type: string
+                userId:
+                    type: string
+                assetType:
+                    type: string
+                balance:
+                    type: number
+                    format: double
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+        api.membership.v1.GetAssetsReply:
+            type: object
+            properties:
+                assets:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.membership.v1.Asset'
+                totalBalance:
+                    type: number
+                    format: double
+        api.membership.v1.GetProfileReply:
+            type: object
+            properties:
+                user:
+                    $ref: '#/components/schemas/api.membership.v1.User'
+        api.membership.v1.GetReferralsReply:
+            type: object
+            properties:
+                referrals:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.membership.v1.Referral'
+                total:
+                    type: integer
+                    format: int32
+                totalEarnings:
+                    type: number
+                    format: double
+        api.membership.v1.GetWithdrawalsReply:
+            type: object
+            properties:
+                withdrawals:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.membership.v1.Withdrawal'
+                total:
+                    type: integer
+                    format: int32
+        api.membership.v1.LoginReply:
+            type: object
+            properties:
+                userId:
+                    type: string
+                accessToken:
+                    type: string
+                refreshToken:
+                    type: string
+                expiresAt:
+                    type: string
+                    format: date-time
+        api.membership.v1.LoginRequest:
+            type: object
+            properties:
+                email:
+                    type: string
+                password:
+                    type: string
+        api.membership.v1.Referral:
+            type: object
+            properties:
+                id:
+                    type: string
+                referredUserId:
+                    type: string
+                referredUsername:
+                    type: string
+                earnings:
+                    type: number
+                    format: double
+                status:
+                    type: string
+                createdAt:
+                    type: string
+                    format: date-time
+        api.membership.v1.RefreshTokenReply:
+            type: object
+            properties:
+                accessToken:
+                    type: string
+                refreshToken:
+                    type: string
+                expiresAt:
+                    type: string
+                    format: date-time
+        api.membership.v1.RefreshTokenRequest:
+            type: object
+            properties:
+                refreshToken:
+                    type: string
+        api.membership.v1.RegisterReply:
+            type: object
+            properties:
+                userId:
+                    type: string
+                accessToken:
+                    type: string
+                refreshToken:
+                    type: string
+                expiresAt:
+                    type: string
+                    format: date-time
+        api.membership.v1.RegisterRequest:
+            type: object
+            properties:
+                email:
+                    type: string
+                password:
+                    type: string
+                username:
+                    type: string
+                referralCode:
+                    type: string
+            description: Authentication Messages
+        api.membership.v1.UpdateAssetReply:
+            type: object
+            properties:
+                asset:
+                    $ref: '#/components/schemas/api.membership.v1.Asset'
+        api.membership.v1.UpdateAssetRequest:
+            type: object
+            properties:
+                assetId:
+                    type: string
+                amount:
+                    type: number
+                    format: double
+                operation:
+                    type: string
+        api.membership.v1.UpdateProfileReply:
+            type: object
+            properties:
+                user:
+                    $ref: '#/components/schemas/api.membership.v1.User'
+        api.membership.v1.UpdateProfileRequest:
+            type: object
+            properties:
+                username:
+                    type: string
+                phone:
+                    type: string
+                avatarUrl:
+                    type: string
+        api.membership.v1.User:
+            type: object
+            properties:
+                id:
+                    type: string
+                email:
+                    type: string
+                username:
+                    type: string
+                phone:
+                    type: string
+                avatarUrl:
+                    type: string
+                referralCode:
+                    type: string
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+        api.membership.v1.Withdrawal:
+            type: object
+            properties:
+                id:
+                    type: string
+                userId:
+                    type: string
+                amount:
+                    type: number
+                    format: double
+                paymentMethod:
+                    type: string
+                status:
+                    type: string
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+        api.membership.v1.WithdrawalReply:
+            type: object
+            properties:
+                withdrawal:
+                    $ref: '#/components/schemas/api.membership.v1.Withdrawal'
+        api.membership.v1.WithdrawalRequest:
+            type: object
+            properties:
+                amount:
+                    type: number
+                    format: double
+                paymentMethod:
+                    type: string
+                paymentDetails:
+                    type: string
+tags:
+    - name: Membership

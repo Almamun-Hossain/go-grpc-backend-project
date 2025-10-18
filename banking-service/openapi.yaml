@@ -1,0 +1,363 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: Banking API
+    description: Banking service handles integration with upstream banking APIs
+    version: 0.0.1
+paths:
+    /v1/banking/cards:
+        get:
+            tags:
+                - Banking
+            operationId: Banking_ListCards
+            parameters:
+                - name: userId
+                  in: query
+                  schema:
+                    type: string
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.banking.v1.ListCardsReply'
+    /v1/banking/cards/{cardId}:
+        get:
+            tags:
+                - Banking
+            description: Card Information
+            operationId: Banking_GetCardInfo
+            parameters:
+                - name: cardId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.banking.v1.GetCardInfoReply'
+    /v1/banking/cards/{cardId}/balance:
+        get:
+            tags:
+                - Banking
+            description: Credit Card Balance
+            operationId: Banking_GetCreditCardBalance
+            parameters:
+                - name: cardId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.banking.v1.GetCreditCardBalanceReply'
+    /v1/banking/cards/{cardId}/physical:
+        get:
+            tags:
+                - Banking
+            description: Physical Card Display
+            operationId: Banking_GetPhysicalCardDetails
+            parameters:
+                - name: cardId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.banking.v1.GetPhysicalCardDetailsReply'
+    /v1/banking/exchange-rate:
+        get:
+            tags:
+                - Banking
+            description: Exchange Rates
+            operationId: Banking_GetExchangeRate
+            parameters:
+                - name: fromCurrency
+                  in: query
+                  schema:
+                    type: string
+                - name: toCurrency
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.banking.v1.GetExchangeRateReply'
+    /v1/banking/remittance:
+        get:
+            tags:
+                - Banking
+            operationId: Banking_ListRemittances
+            parameters:
+                - name: userId
+                  in: query
+                  schema:
+                    type: string
+                - name: page
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pageSize
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: status
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.banking.v1.ListRemittancesReply'
+        post:
+            tags:
+                - Banking
+            description: Global Remittance
+            operationId: Banking_InitiateRemittance
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.banking.v1.InitiateRemittanceRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.banking.v1.InitiateRemittanceReply'
+    /v1/banking/remittance/{transactionId}:
+        get:
+            tags:
+                - Banking
+            operationId: Banking_GetRemittanceStatus
+            parameters:
+                - name: transactionId
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.banking.v1.GetRemittanceStatusReply'
+components:
+    schemas:
+        api.banking.v1.Card:
+            type: object
+            properties:
+                id:
+                    type: string
+                userId:
+                    type: string
+                cardNumberMasked:
+                    type: string
+                cardType:
+                    type: string
+                cardBrand:
+                    type: string
+                status:
+                    type: string
+                expiryDate:
+                    type: string
+                    format: date-time
+                createdAt:
+                    type: string
+                    format: date-time
+        api.banking.v1.GetCardInfoReply:
+            type: object
+            properties:
+                card:
+                    $ref: '#/components/schemas/api.banking.v1.Card'
+        api.banking.v1.GetCreditCardBalanceReply:
+            type: object
+            properties:
+                cardId:
+                    type: string
+                availableBalance:
+                    type: number
+                    format: double
+                creditLimit:
+                    type: number
+                    format: double
+                outstandingBalance:
+                    type: number
+                    format: double
+                currency:
+                    type: string
+                lastUpdated:
+                    type: string
+                    format: date-time
+        api.banking.v1.GetExchangeRateReply:
+            type: object
+            properties:
+                fromCurrency:
+                    type: string
+                toCurrency:
+                    type: string
+                rate:
+                    type: number
+                    format: double
+                timestamp:
+                    type: string
+                    format: date-time
+        api.banking.v1.GetPhysicalCardDetailsReply:
+            type: object
+            properties:
+                cardId:
+                    type: string
+                cardNumberMasked:
+                    type: string
+                cardholderName:
+                    type: string
+                expiryDate:
+                    type: string
+                cvvMasked:
+                    type: string
+                cardType:
+                    type: string
+                cardBrand:
+                    type: string
+        api.banking.v1.GetRemittanceStatusReply:
+            type: object
+            properties:
+                remittance:
+                    $ref: '#/components/schemas/api.banking.v1.Remittance'
+        api.banking.v1.InitiateRemittanceReply:
+            type: object
+            properties:
+                transactionId:
+                    type: string
+                status:
+                    type: string
+                amount:
+                    type: number
+                    format: double
+                exchangeRate:
+                    type: number
+                    format: double
+                fee:
+                    type: number
+                    format: double
+                totalAmount:
+                    type: number
+                    format: double
+                createdAt:
+                    type: string
+                    format: date-time
+        api.banking.v1.InitiateRemittanceRequest:
+            type: object
+            properties:
+                fromAccount:
+                    type: string
+                toAccount:
+                    type: string
+                amount:
+                    type: number
+                    format: double
+                fromCurrency:
+                    type: string
+                toCurrency:
+                    type: string
+                beneficiaryName:
+                    type: string
+                beneficiaryBank:
+                    type: string
+                purpose:
+                    type: string
+            description: Global Remittance Messages
+        api.banking.v1.ListCardsReply:
+            type: object
+            properties:
+                cards:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.banking.v1.Card'
+                total:
+                    type: integer
+                    format: int32
+        api.banking.v1.ListRemittancesReply:
+            type: object
+            properties:
+                remittances:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.banking.v1.Remittance'
+                total:
+                    type: integer
+                    format: int32
+        api.banking.v1.Remittance:
+            type: object
+            properties:
+                transactionId:
+                    type: string
+                fromAccount:
+                    type: string
+                toAccount:
+                    type: string
+                amount:
+                    type: number
+                    format: double
+                fromCurrency:
+                    type: string
+                toCurrency:
+                    type: string
+                exchangeRate:
+                    type: number
+                    format: double
+                fee:
+                    type: number
+                    format: double
+                status:
+                    type: string
+                beneficiaryName:
+                    type: string
+                beneficiaryBank:
+                    type: string
+                createdAt:
+                    type: string
+                    format: date-time
+                updatedAt:
+                    type: string
+                    format: date-time
+tags:
+    - name: Banking
