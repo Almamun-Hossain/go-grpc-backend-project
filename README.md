@@ -267,7 +267,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 👨‍💻 Author
 
 **Almamun Hossain**
-- Email: almamunhossains@gmail.com
+- Website: [almamun.me](https://almamun.me)
 - GitHub: [@Almamun-Hossain](https://github.com/Almamun-Hossain)
 
 ## 🙏 Acknowledgments
